@@ -106,6 +106,7 @@ function buildPieces(){
         }
     }
     _canvas.onmousedown = shufflePuzzle;
+    touchhandler();
 }
 
 //Disordered Puzzle at the begining
@@ -273,5 +274,39 @@ function gameOver(){
         const btn =document.querySelector('.firework button');
         btn.style.display = 'block';
     }, 3000)
+}
+
+function touchhandler(){
+    // Set up touch events for mobile, etc
+    _canvas.addEventListener("touchstart", function (e) {
+        mousePos = getTouchPos(_canvas, e);
+    var touch = e.touches[0];
+    var mouseEvent = new MouseEvent("mousedown", {
+    clientX: touch.clientX,
+    clientY: touch.clientY
+    });
+    _canvas.dispatchEvent(mouseEvent);
+    }, false);
+    _canvas.addEventListener("touchend", function (e) {
+    var mouseEvent = new MouseEvent("mouseup", {});
+    _canvas.dispatchEvent(mouseEvent);
+    }, false);
+    _canvas.addEventListener("touchmove", function (e) {
+    var touch = e.touches[0];
+    var mouseEvent = new MouseEvent("mousemove", {
+    clientX: touch.clientX,
+    clientY: touch.clientY
+    });
+    _canvas.dispatchEvent(mouseEvent);
+    }, false);
+
+    // Get the position of a touch relative to the canvas
+    function getTouchPos(canvasDom, touchEvent) {
+    var rect = canvasDom.getBoundingClientRect();
+    return {
+    x: touchEvent.touches[0].clientX - rect.left,
+    y: touchEvent.touches[0].clientY - rect.top
+    };
+    }
 }
 
