@@ -1,0 +1,355 @@
+@import url('https://fonts.googleapis.com/css2?family=Metrophobic&display=swap');
+
+$bg : #521945;
+$canvas-bg: #912f56;
+$color: #eaf2ef;
+$secondary-color: #60992d;
+$font: 'Metrophobic', sans-serif;
+
+@mixin transform($property) {
+    -ms-transform: $property; /* IE 9 */
+  -webkit-transform: $property; /* Safari */
+  transform: $property;
+}
+
+%flex-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+%flex-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+%position-center{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+body{
+    background: $bg;
+    @extend %flex-row;
+    color: $color;
+    font-family: $font;
+    text-align: center;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#container{
+    width: 90%;
+    margin-top: 5vh;
+    @extend %flex-row;
+    justify-content: space-between;
+}
+
+.puzzle{
+    width: 70%;
+    height: 70vh;
+
+    #canvas{
+        border-radius: 15px;
+        box-shadow: 1px 2px 10px rgba(#000000, 0.3);
+        background: $canvas-bg;
+    }
+}
+
+.details{
+    width: 25%;
+    @extend %flex-column;
+
+    .image{
+        width: 100%;        
+        margin-bottom: 50px;
+
+        img{
+            width: 100%;
+            padding: 10px 10px 25px 10px;
+            border: 1px solid #BFBFBF;
+            background-color: white;
+            box-shadow: 10px 10px 5px rgba(#000000, 0.2);
+            @include transform(rotate(10deg));
+        }
+    }
+
+    .mode{
+        @extend %flex-column;
+        
+        label{
+            width: 100%;
+            @extend %flex-row;
+            justify-content: flex-start;
+            margin: 8px 0;
+            cursor: pointer;
+            position: relative;
+
+            &:hover{
+                color: $secondary-color;
+            }
+        }
+
+        input{
+            opacity: 0;
+            @extend %position-center;
+            z-index: -1;
+
+            &:checked+.design::before{
+                opacity: 1;
+                transform: scale(.5);
+            }
+
+            &:hover+.design,
+            &:focus+.design{
+                border: 1px solid $secondary-color;
+                &:before{
+                    background: $secondary-color;
+                }
+            }
+
+            &:focus+.design::after,
+            &:active+.design::after{
+                opacity: .1;
+                transform: scale(2);
+            }
+            
+        }
+
+        .design{
+            width: 18px;
+            height: 18px;
+            border: 1px solid $color;
+            border-radius: 50%;
+            margin-right: 15px;
+            position: relative;
+
+            &::before,
+            &::after {
+                content: '';
+                display: block;
+                width: inherit;
+                height: inherit;
+                border-radius: inherit;
+                position: absolute;
+                transform: scale(0);
+                transform-origin: center center;
+            }
+
+            &::before{
+                background: $color;
+                opacity: 0;
+                transition: .3s;
+            }
+
+            &::after{
+                background: $color;
+                opacity: .4;
+                transition: .6s;
+            }
+        }
+        
+    }
+}
+
+
+/********** Loading  *******/
+#loading{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: $bg;
+    z-index: 2;
+    opacity: 0.95;
+    @extend %flex-column;
+
+    h3{
+        margin: 10px;
+    }
+    span{
+        animation: spinner 0.5s steps(2) infinite;
+    }
+}
+@keyframes spinner{
+    0%{
+        transform: rotate(0deg);
+    }
+
+    25%{
+        transform: rotate(90deg);
+    }
+
+    50%{
+        transform: rotate(180deg);
+    }
+
+    75%{
+        transform: rotate(270deg);
+    }
+
+    100%{
+        transform: rotate(360deg);
+    }
+}
+
+/*****   Fireworks   ********/
+$particles:60;
+$width: 500;
+$height: 500;
+
+//create the explosion
+$box-shadow: ();
+$box-shadow2: ();
+@for $i from 0 through $particles {
+    $box-shadow: $box-shadow, 
+        random($width)-$width/2 + px 
+        random($height)-$height / 1.2 + px 
+        hsl(random(360), 100, 50);
+        $box-shadow2: $box-shadow2, 0 0 rgb(255, 251, 0);
+
+
+}
+
+@mixin keyframes ($animationName) {
+    @-webkit-keyframes #{$animationName} {
+        @content;
+    }
+
+    @-moz-keyframes #{$animationName} {
+        @content;
+    }
+
+    @-o-keyframes #{$animationName} {
+        @content;
+    }
+
+    @-ms-keyframes #{$animationName} {
+        @content;
+    }
+
+    @keyframes #{$animationName} {
+        @content;
+    }
+}
+
+@mixin animation-delay ($settings) {
+    -moz-animation-delay: $settings;
+    -webkit-animation-delay: $settings;
+    -o-animation-delay: $settings;
+    -ms-animation-delay: $settings;
+    animation-delay: $settings;
+}
+
+@mixin animation-duration ($settings) {
+    -moz-animation-duration: $settings;
+    -webkit-animation-duration: $settings;
+    -o-animation-duration: $settings;
+    -ms-animation-duration: $settings;
+    animation-duration: $settings;
+}
+
+@mixin animation ($settings) {
+    -moz-animation: $settings;
+    -webkit-animation: $settings;
+    -o-animation: $settings;
+    -ms-animation: $settings;
+    animation: $settings;
+}
+
+@mixin transform ($settings) {
+    transform: $settings;
+    -moz-transform: $settings;
+    -webkit-transform: $settings;
+    -o-transform: $settings;
+    -ms-transform: $settings;
+}
+
+.firework{
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    overflow: hidden;
+    background: transparent;
+    display: none;
+    transition: background 1s ease;
+
+    button{
+        @extend %position-center;
+        padding: 50px;
+        cursor: pointer;
+        background: $canvas-bg;
+        color: $color;
+        outline: none;
+        border: none;
+        display: none;
+
+        &:focus,
+        &:hover{
+            background: $bg;
+        }
+    }
+}
+
+.firework > .before, .firework > .after {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    box-shadow: $box-shadow2;
+    @include animation((1s bang ease-out infinite backwards, 1s gravity ease-in infinite backwards, 5s position linear infinite backwards));
+  }
+      
+  .firework > .after {
+    @include animation-delay((1.25s, 1.25s, 1.25s));
+    @include animation-duration((1.25s, 1.25s, 6.25s));
+  }
+          
+  @include keyframes(bang) {
+    to {
+      box-shadow:$box-shadow;
+    }
+  }
+      
+  @include keyframes(gravity)  {
+    to {
+      @include transform(translateY(200px));
+      opacity: 0;
+    }
+  }
+      
+  @include keyframes(position) {
+    0%, 19.9% {
+      margin-top: 10%;
+      margin-left: 40%;
+    }
+    20%, 39.9% {
+      margin-top: 40%;
+      margin-left: 30%;
+    }
+    40%, 59.9% {  
+      margin-top: 20%;
+      margin-left: 70%
+    }
+    60%, 79.9% {  
+      margin-top: 30%;
+      margin-left: 20%;
+    }
+    80%, 99.9% {  
+      margin-top: 30%;
+      margin-left: 80%;
+    }
+  }
+  
